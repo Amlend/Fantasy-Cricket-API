@@ -1,0 +1,16 @@
+{
+  "name": "fantasy-cricket-api",
+  "version": "1.0.0",
+  "description": "A simple backend to accept team entries for a fantasy cricket app (similar to Dream11) and process the results based on match results.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Amlend Jadaun",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.4"
+  }
+}
