@@ -27,3 +27,34 @@ exports.addTeamEntry = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.processMatchResult = async (req, res) => {
+  try {
+    const matchData = parseData("data/match.json");
+    const playerPoints = calculatePoints(matchData);
+
+    console.log(playerPoints);
+
+    const teamEntries = await TeamEntry.find();
+    for (const entry of teamEntries) {
+      let totalPoints = 0;
+      for (const player of entry.players) {
+        const points = playerPoints[player.Player] || 0;
+        if (player === entry.captain) {
+          totalPoints += points * 2;
+        } else if (player === entry.viceCaptain) {
+          totalPoints += points * 1.5;
+        } else {
+          totalPoints += points;
+        }
+      }
+      console.log(totalPoints);
+      entry.totalPoints = totalPoints;
+      await entry.save();
+    }
+
+    res.status(200).json({ message: "Match results processed successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

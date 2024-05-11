@@ -1,31 +1,48 @@
 const validateTeam = (players, captain, viceCaptain) => {
-  // Validate the number of players
   if (players.length !== 11) {
     return false;
   }
 
-  // Map to store player roles and their counts
-  const playerRoles = new Map();
-  for (const player of players) {
+  const playerTypes = {
+    WK: 0,
+    BAT: 0,
+    AR: 0,
+    BWL: 0,
+  };
+
+  const playerRoles = {
+    WICKETKEEPER: "WK",
+    BATTER: "BAT",
+    "ALL-ROUNDER": "AR",
+    BOWLER: "BWL",
+  };
+
+  players.forEach((player) => {
     const role = player.Role.toUpperCase();
+    const playerType = playerRoles[role];
+    if (playerType) {
+      playerTypes[playerType]++;
+    } else {
+      return false; // Invalid role
+    }
+  });
 
-    // Validate player role
-    if (!isValidRole(role)) {
+  const playerLimits = {
+    WK: [1, 8],
+    BAT: [1, 8],
+    AR: [1, 8],
+    BWL: [1, 8],
+  };
+
+  for (const type in playerTypes) {
+    if (
+      playerTypes[type] < playerLimits[type][0] ||
+      playerTypes[type] > playerLimits[type][1]
+    ) {
       return false;
     }
-
-    const count = playerRoles.get(role) || 0;
-    playerRoles.set(role, count + 1);
   }
 
-  // Validate player role counts
-  for (const [role, count] of playerRoles) {
-    if (count < 1 || count > 8) {
-      return false;
-    }
-  }
-
-  // Validate captain and vice-captain are in the players list
   if (
     !players.some((player) => player.Player === captain) ||
     !players.some((player) => player.Player === viceCaptain)
@@ -35,9 +52,5 @@ const validateTeam = (players, captain, viceCaptain) => {
 
   return true;
 };
-
-function isValidRole(role) {
-  return ["WICKETKEEPER", "BATTER", "ALL-ROUNDER", "BOWLER"].includes(role);
-}
 
 module.exports = validateTeam;
