@@ -58,3 +58,22 @@ exports.processMatchResult = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.viewTeamsResult = async (req, res) => {
+  try {
+    // Get all team entries with their total points
+    const teamEntries = await TeamEntry.find().sort({ totalPoints: -1 });
+
+    // Find the top score
+    const topScore = teamEntries[0]?.totalPoints || 0;
+
+    // Find the winning teams
+    const winningTeams = teamEntries.filter(
+      (entry) => entry.totalPoints === topScore
+    );
+
+    res.status(200).json({ winningTeams, teamEntries });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

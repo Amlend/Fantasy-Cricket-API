@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.use("/api", teamRoutes);
+app.use(teamRoutes);
 
 // MongoDB connection
 const PORT = process.env.PORT || 3000;
